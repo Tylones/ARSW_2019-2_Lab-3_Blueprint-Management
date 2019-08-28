@@ -102,9 +102,13 @@ public class InMemoryPersistenceTest {
         Point[] pts2=new Point[]{new Point(2, 2),new Point(12, 12)};
         Blueprint bp2=new Blueprint("john", "thepaint2",pts2);
         
+        Point[] pts3=new Point[]{new Point(2, 2),new Point(12, 12)};
+        Blueprint bp3=new Blueprint("jAnother author", "thepaint2",pts3);
+        
         try {
             ibpp.saveBlueprint(bp);
             ibpp.saveBlueprint(bp2);
+            ibpp.saveBlueprint(bp3);
         } catch (BlueprintPersistenceException ex) {
             fail("Blueprint persistence failed inserting the first blueprint.");
         }
