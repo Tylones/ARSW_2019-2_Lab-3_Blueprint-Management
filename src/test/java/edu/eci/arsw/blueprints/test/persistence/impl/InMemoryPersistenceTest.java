@@ -7,9 +7,12 @@ package edu.eci.arsw.blueprints.test.persistence.impl;
 
 import edu.eci.arsw.blueprints.model.Blueprint;
 import edu.eci.arsw.blueprints.model.Point;
+import edu.eci.arsw.blueprints.persistence.AuthorNotFoundException;
 import edu.eci.arsw.blueprints.persistence.BlueprintNotFoundException;
 import edu.eci.arsw.blueprints.persistence.BlueprintPersistenceException;
 import edu.eci.arsw.blueprints.persistence.impl.InMemoryBlueprintPersistence;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.junit.Test;
@@ -66,6 +69,55 @@ public class InMemoryPersistenceTest {
             
         }
                 
+        
+    }
+    
+    @Test
+    public void saveAndGetBpTest(){
+        InMemoryBlueprintPersistence ibpp=new InMemoryBlueprintPersistence();
+        
+        Point[] pts=new Point[]{new Point(0, 0),new Point(10, 10)};
+        Blueprint bp=new Blueprint("john", "thepaint",pts);
+        
+        try {
+            ibpp.saveBlueprint(bp);
+        } catch (BlueprintPersistenceException ex) {
+            fail("Blueprint persistence failed inserting the first blueprint.");
+        }
+        
+        try {
+            ibpp.getBlueprint("john", "thepaint");
+        }catch (BlueprintNotFoundException ex){
+            fail("Blueprint not found");
+        }
+    }
+    
+    @Test
+    public void saveAndGetSetOfBpTest(){
+        InMemoryBlueprintPersistence ibpp=new InMemoryBlueprintPersistence();
+        
+        Point[] pts=new Point[]{new Point(0, 0),new Point(10, 10)};
+        Blueprint bp=new Blueprint("john", "thepaint",pts);
+        
+        Point[] pts2=new Point[]{new Point(2, 2),new Point(12, 12)};
+        Blueprint bp2=new Blueprint("john", "thepaint2",pts2);
+        
+        try {
+            ibpp.saveBlueprint(bp);
+            ibpp.saveBlueprint(bp2);
+        } catch (BlueprintPersistenceException ex) {
+            fail("Blueprint persistence failed inserting the first blueprint.");
+        }
+        
+        try{
+            Set<Blueprint> s = ibpp.getBlueprintsByAuthor("john");
+            if(s.size() != 2)
+                fail("Wrong size of set");
+            
+        }catch(AuthorNotFoundException ex){
+            fail("Author not found");
+        }
+        
         
     }
 
