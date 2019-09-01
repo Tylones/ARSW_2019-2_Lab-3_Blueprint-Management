@@ -115,8 +115,8 @@ public class InMemoryPersistenceTest {
         
         try{
             Set<Blueprint> s = ibpp.getBlueprintsByAuthor("john");
-            if(s.size() != 2)
-                fail("Wrong size of set");
+            assertEquals("Wrong number of bp returned", 2, s.size());
+            
             
         }catch(AuthorNotFoundException ex){
             fail("Author not found");
