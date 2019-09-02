@@ -10,7 +10,6 @@ import edu.eci.arsw.blueprints.model.Blueprint;
 import edu.eci.arsw.blueprints.model.Point;
 
 
-@Service
 public class SubsamplingFilter implements BlueprintsFilter {
 
     @Override
