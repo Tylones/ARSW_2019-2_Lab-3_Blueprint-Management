@@ -60,7 +60,11 @@ public class BlueprintsServices {
      */
     
     public Set<Blueprint> getBlueprintsByAuthor(String author) throws AuthorNotFoundException{
-        return this.bpp.getBlueprintsByAuthor(author);
+        Set<Blueprint> setToReturn = this.bpp.getBlueprintsByAuthor(author);
+        for(Blueprint b : setToReturn){
+            b = bpf.filterBlueprint(b);
+        }
+        return setToReturn;
     }
     
 }
