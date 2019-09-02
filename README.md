@@ -412,3 +412,75 @@ public class SubsamplingFilterTest{
 ```
 
 Now, by adding the *@Service* before either filter class definition, we can use the desired filter that will be used when retrieving blueprints. 
+
+
+We can verify that it works by modifying a little bit the main program. In this program, we will add a blueprint named *thepaint* from the author *mack*. This blueprint contains 6 points : 
+
+* (40,40)
+* (15,15)
+* (40,40)
+* (35,35)
+* (35,35)
+* (35,35)
+
+We can see that this blueprints contains redundants points. For this example, we will then be using the *RedundancyFilter*. At the end of the program, we will retrieve this blueprints with the *BlueprintsService* which is using this filter and then outputs all the points of the retrieved blueprint. If the filter is working, it should only output 3 points : 
+
+```
+public class mainProgram{
+
+    public static void main(String[] args) throws BlueprintNotFoundException, BlueprintPersistenceException, AuthorNotFoundException{
+        ApplicationContext ac = new ClassPathXmlApplicationContext("applicationContext.xml");
+        BlueprintsServices bps = ac.getBean(BlueprintsServices.class);
+
+        System.out.println("Creating new blueprints...");
+        Point[] pts0=new Point[]{new Point(40, 40),new Point(15, 15), new Point(40, 40), new Point(35, 35), new Point(35, 35), new Point(35, 35)};
+        Blueprint bp0=new Blueprint("mack", "mypaint",pts0);
+
+        Point[] pts1=new Point[]{new Point(20, 20),new Point(10, 10)};
+        Blueprint bp1=new Blueprint("etienne", "arsw",pts1);
+
+        Point[] pts2=new Point[]{new Point(10, 10),new Point(5, 5)};
+        Blueprint bp2=new Blueprint("etienne", "third",pts2);
+
+        System.out.println("Adding new blueprints to the BlueprintService...");
+        bps.addNewBlueprint(bp0);
+        bps.addNewBlueprint(bp1);
+        bps.addNewBlueprint(bp2);
+
+        System.out.println("Retrieving blue print \"mypaint\" from the author \"mack\"");
+        Blueprint b = bps.getBlueprint("mack", "mypaint");
+
+        System.out.println("Name of the retrieved blueprint : " + b.getName());
+        System.out.println("Author of the retrieved blueprint : " + b.getAuthor());
+
+
+        System.out.println("Number of blueprints from the author \"etienne\" : " + bps.getBlueprintsByAuthor("etienne").size());
+
+        System.out.println("Number of points in the filtered blueprint : " + bps.getBlueprint("mack", "mypaint").getPoints().size());
+        
+        System.out.println("Points in the filter blueprint : ");
+        for(Point p : bps.getBlueprint("mack", "mypaint").getPoints()){
+            System.out.println("X : " + p.getX() + "   Y : " + p.getY());
+        }
+    }
+
+}
+```
+
+Output : 
+
+```
+Creating new blueprints...
+Adding new blueprints to the BlueprintService...
+Retrieving blue print "mypaint" from the author "mack"
+Name of the retrieved blueprint : mypaint
+Author of the retrieved blueprint : mack
+Number of blueprints from the author "etienne" : 2
+Number of points in the filtered blueprint : 3
+Points in the filter blueprint : 
+X : 40   Y : 40
+X : 15   Y : 15
+X : 35   Y : 35
+```
+
+It is outputting only three points, which are not duplicates, meaning that the filter is working.
