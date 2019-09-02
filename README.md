@@ -73,7 +73,7 @@ public class BlueprintsServices {
     
     public Blueprint getBlueprint(String author,String name) throws BlueprintNotFoundException{
 
-        return  this.bpf.filterBlueprint(this.bpp.getBlueprint(author, name));
+        return this.bpp.getBlueprint(author, name);
     }
     
     /**
@@ -235,5 +235,128 @@ Name of the retrieved blueprint : mypaint
 Author of the retrieved blueprint : mack
 ```
 
+## Question 3)
 
+To implement filters, I created new java interface name *BlueprintsFilter* and then I created two class, *RedundancyFilter* and *SubsamlpingFilter* that implement that interface : 
 
+* *BlueprintsFilter* :
+```
+public interface BlueprintsFilter{
+    /**
+     * 
+     * @param bp The blueprint to filter
+     * @return the filtered blueprint
+     */
+    public Blueprint filterBlueprint(Blueprint bp);
+}
+
+```
+
+* *RedundancyFilter* :
+```
+public class RedundancyFilter implements BlueprintsFilter {
+
+    @Override
+    public Blueprint filterBlueprint(Blueprint bp) {
+        Blueprint filteredBlueprint;
+        List<Point> filteredPointList = new ArrayList<Point>();
+        
+        for(Point p : bp.getPoints()){
+            if(!filteredPointList.contains(p))
+                filteredPointList.add(p);
+        }
+
+        Point[] array = new Point[filteredPointList.size()];
+
+        for(int i = 0; i < filteredPointList.size(); i++)
+            array[i] = filteredPointList.get(i);
+        filteredBlueprint = new Blueprint(bp.getAuthor(), bp.getName(),array);
+
+        return filteredBlueprint;
+
+	}
+
+}
+```
+
+* *SubsamplingFilter* :
+
+```
+@Service
+public class SubsamplingFilter implements BlueprintsFilter {
+
+    @Override
+    public Blueprint filterBlueprint(Blueprint bp) {
+        Blueprint filteredBlueprint;
+        List<Point> filteredPointList = new ArrayList<Point>();
+        boolean toFilter = false;
+        for(Point p : bp.getPoints()){
+            if(!toFilter)
+                filteredPointList.add(p);
+            toFilter = !toFilter;
+        }
+
+        Point[] array = new Point[filteredPointList.size()];
+
+        for(int i = 0; i < filteredPointList.size(); i++)
+            array[i] = filteredPointList.get(i);
+        filteredBlueprint = new Blueprint(bp.getAuthor(), bp.getName(),array);
+
+        return filteredBlueprint;
+	}
+
+}
+```
+
+I then modified the *BlueprintsService* so that it uses a filter :
+
+```
+@Service
+public class BlueprintsServices {
+   
+    @Autowired
+    BlueprintsPersistence bpp=null;
+
+    @Autowired
+    BlueprintsFilter bpf = null;
+    
+    public void addNewBlueprint(Blueprint bp) throws BlueprintPersistenceException{
+        this.bpp.saveBlueprint(bp);
+    }
+    
+    public Set<Blueprint> getAllBlueprints(){
+        return null;
+    }
+    
+    /**
+     * 
+     * @param author blueprint's author
+     * @param name blueprint's name
+     * @return the blueprint of the given name created by the given author
+     * @throws BlueprintNotFoundException if there is no such blueprint
+     */
+    
+    public Blueprint getBlueprint(String author,String name) throws BlueprintNotFoundException{
+
+        return  this.bpf.filterBlueprint(this.bpp.getBlueprint(author, name));
+    }
+    
+    /**
+     * 
+     * @param author blueprint's author
+     * @return all the blueprints of the given author
+     * @throws BlueprintNotFoundException if the given author doesn't exist
+     */
+    
+    public Set<Blueprint> getBlueprintsByAuthor(String author) throws AuthorNotFoundException{
+        Set<Blueprint> setToReturn = this.bpp.getBlueprintsByAuthor(author);
+        for(Blueprint b : setToReturn){
+            b = bpf.filterBlueprint(b);
+        }
+        return setToReturn;
+    }
+    
+}
+```
+
+By adding *@Service* before either the *SubsamplingFilter* class definition, or before *RedundancyFilter*, we can then chose to injected either filter, and so to use the filter that we want.
