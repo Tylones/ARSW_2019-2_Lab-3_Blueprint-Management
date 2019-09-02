@@ -1,5 +1,19 @@
 # ARSW_2019-2_Lab-3_Blueprint-Management
 
+## Name :
+
+```
+Etienne Maxence Eugene REITZ
+GitHub username : Tylones
+```
+
+## Build and test instructions : 
+
+Go in the project directory :
+
+* To build the project , run the command : ```mvn package```
+* To test the project, run the command : ```mvn test```
+
 ## Question 1) 
 To add the dependencies of Spring, I added an XML file that I called *applicationContext.xml* in which I specified the base package in which to look for components : 
 
