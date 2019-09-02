@@ -17,7 +17,7 @@ public class mainProgram{
         ApplicationContext ac = new ClassPathXmlApplicationContext("applicationContext.xml");
         BlueprintsServices bps = ac.getBean(BlueprintsServices.class);
 
-        Point[] pts0=new Point[]{new Point(40, 40),new Point(15, 15), new Point(40, 40)};
+        Point[] pts0=new Point[]{new Point(40, 40),new Point(15, 15), new Point(40, 40), new Point(35, 35)};
         Blueprint bp0=new Blueprint("mack", "mypaint",pts0);
 
         Point[] pts1=new Point[]{new Point(20, 20),new Point(10, 10)};

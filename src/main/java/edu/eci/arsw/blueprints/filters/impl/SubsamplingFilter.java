@@ -3,10 +3,14 @@ package edu.eci.arsw.blueprints.filters.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+
 import edu.eci.arsw.blueprints.filters.BlueprintsFilter;
 import edu.eci.arsw.blueprints.model.Blueprint;
 import edu.eci.arsw.blueprints.model.Point;
 
+
+@Service
 public class SubsamplingFilter implements BlueprintsFilter {
 
     @Override
@@ -20,12 +24,17 @@ public class SubsamplingFilter implements BlueprintsFilter {
             toFilter = !toFilter;
         }
 
-        filteredBlueprint = new Blueprint(bp.getAuthor(), bp.getName(),(Point[]) filteredPointList.toArray());
+        System.out.println("Subsampling");
+        Point[] array = new Point[filteredPointList.size()];
+
+        for(int i = 0; i < filteredPointList.size(); i++)
+            array[i] = filteredPointList.get(i);
+        filteredBlueprint = new Blueprint(bp.getAuthor(), bp.getName(),array);
         
         
         
         
-        return null;
+        return filteredBlueprint;
 	}
 
 }
