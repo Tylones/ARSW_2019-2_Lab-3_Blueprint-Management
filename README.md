@@ -360,3 +360,55 @@ public class BlueprintsServices {
 ```
 
 By adding *@Service* before either the *SubsamplingFilter* class definition, or before *RedundancyFilter*, we can then chose to injected either filter, and so to use the filter that we want.
+
+
+## Question 4)
+
+I added the two tests to the corresponding filters. These tests add a blueprint with an array of points, retrieve it by filtering them, and then compare the filtered array with the array that we are supposed to get after filtering the blueprint :
+* *RedundancyFilterTest* :
+
+```
+public class RedundancyFilterTest {
+
+    @Test
+    public void saveNewAndLoadFilteredTest() throws BlueprintPersistenceException, BlueprintNotFoundException{
+        InMemoryBlueprintPersistence ibpp=new InMemoryBlueprintPersistence();
+        RedundancyFilter rf = new RedundancyFilter();
+
+        Point[] pts0=new Point[]{new Point(40, 40),new Point(15, 15), new Point(40, 40), new Point(40, 40), new Point(15, 15), new Point(30, 30)};
+        Blueprint bp0=new Blueprint("mack", "mypaint",pts0);
+        
+        ibpp.saveBlueprint(bp0);
+
+        Blueprint bpToTest = rf.filterBlueprint(ibpp.getBlueprint("mack", "mypaint"));
+
+        assertArrayEquals("Redundant filter didn't filter well",new Object[]{new Point(40, 40),new Point(15, 15), new Point(30, 30)}, bpToTest.getPoints().toArray());  
+    }
+}
+
+```
+
+* *SubsamplingFilterTest* :
+
+```
+public class SubsamplingFilterTest{
+
+    @Test
+    public void saveNewAndLoadFilteredTest() throws BlueprintPersistenceException, BlueprintNotFoundException{
+        InMemoryBlueprintPersistence ibpp=new InMemoryBlueprintPersistence();
+        SubsamplingFilter sf = new SubsamplingFilter();
+
+        Point[] pts0=new Point[]{new Point(40, 40),new Point(15, 15), new Point(40, 40), new Point(40, 40), new Point(15, 15), new Point(30, 30)};
+        Blueprint bp0=new Blueprint("mack", "mypaint",pts0);
+        
+        ibpp.saveBlueprint(bp0);
+
+        Blueprint bpToTest = sf.filterBlueprint(ibpp.getBlueprint("mack", "mypaint"));
+
+        assertArrayEquals("Subsampling filter didn't filter well",new Object[]{new Point(40, 40), new Point(40, 40), new Point(15, 15)}, bpToTest.getPoints().toArray());  
+    }
+
+}
+```
+
+Now, by adding the *@Service* before either filter class definition, we can use the desired filter that will be used when retrieving blueprints. 
