@@ -24,7 +24,6 @@ public class SubsamplingFilter implements BlueprintsFilter {
             toFilter = !toFilter;
         }
 
-        System.out.println("Subsampling");
         Point[] array = new Point[filteredPointList.size()];
 
         for(int i = 0; i < filteredPointList.size(); i++)

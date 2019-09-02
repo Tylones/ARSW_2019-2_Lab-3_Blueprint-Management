@@ -17,6 +17,7 @@ public class mainProgram{
         ApplicationContext ac = new ClassPathXmlApplicationContext("applicationContext.xml");
         BlueprintsServices bps = ac.getBean(BlueprintsServices.class);
 
+        System.out.println("Creating new blueprints...");
         Point[] pts0=new Point[]{new Point(40, 40),new Point(15, 15), new Point(40, 40), new Point(35, 35)};
         Blueprint bp0=new Blueprint("mack", "mypaint",pts0);
 
@@ -26,14 +27,16 @@ public class mainProgram{
         Point[] pts2=new Point[]{new Point(10, 10),new Point(5, 5)};
         Blueprint bp2=new Blueprint("etienne", "third",pts2);
 
+        System.out.println("Adding new blueprints to the BlueprintService...");
         bps.addNewBlueprint(bp0);
         bps.addNewBlueprint(bp1);
         bps.addNewBlueprint(bp2);
 
+        System.out.println("Retrieving blue print \"mypaint\" from the author \"mack\"");
         Blueprint b = bps.getBlueprint("mack", "mypaint");
 
-        System.out.println("First Blueprint Name : " + b.getName());
-        System.out.println("First Blueprint Author : " + b.getAuthor());
+        System.out.println("Name of the retrieved blueprint : " + b.getName());
+        System.out.println("Author of the retrieved blueprint : " + b.getAuthor());
 
 
         System.out.println("Number of blueprints from the author \"etienne\" : " + bps.getBlueprintsByAuthor("etienne").size());

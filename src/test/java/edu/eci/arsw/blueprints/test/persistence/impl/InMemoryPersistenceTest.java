@@ -117,19 +117,17 @@ public class InMemoryPersistenceTest {
         
         try{
             Set<Blueprint> s = ibpp.getBlueprintsByAuthor("john");
+            // Testing if the function returns the good number of BPs
             assertEquals("Wrong number of bp returned", 2, s.size());
             for(Blueprint p : s){
+                // Testing if each BPs is from the right author
                 assertEquals("Wrong author name", "john", p.getAuthor());
             }
             
             
         }catch(AuthorNotFoundException ex){
             fail("Author not found");
-        }
-        
-        
+        }      
     }
-
-
-    
+  
 }
