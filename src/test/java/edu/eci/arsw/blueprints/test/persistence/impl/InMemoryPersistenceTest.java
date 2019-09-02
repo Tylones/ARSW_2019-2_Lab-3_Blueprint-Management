@@ -86,7 +86,9 @@ public class InMemoryPersistenceTest {
         }
         
         try {
-            ibpp.getBlueprint("john", "thepaint");
+            Blueprint retrievedBp = ibpp.getBlueprint("john", "thepaint");
+            assertEquals("Wrong author name", "john", bp.getAuthor());
+            assertEquals("Wrong bpName", "thepaint", bp.getName());
         }catch (BlueprintNotFoundException ex){
             fail("Blueprint not found");
         }
@@ -116,6 +118,9 @@ public class InMemoryPersistenceTest {
         try{
             Set<Blueprint> s = ibpp.getBlueprintsByAuthor("john");
             assertEquals("Wrong number of bp returned", 2, s.size());
+            for(Blueprint p : s){
+                assertEquals("Wrong author name", "john", p.getAuthor());
+            }
             
             
         }catch(AuthorNotFoundException ex){
